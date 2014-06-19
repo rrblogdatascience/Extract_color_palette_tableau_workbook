@@ -32,14 +32,17 @@ for node in tree.findall('./datasources/datasource/column'):
     caption = node.attrib.get('caption')
     if (caption is None and name.replace("[", "").replace("]", "") in dimensionNames) or caption in dimensionNames:
         parentElement = parent_map[node]
-        print "++ found attribute with name = ", name, " and caption = ", caption, " in datasource ", parentElement.attrib.get('caption')
+        dataSourceName = parentElement.attrib.get('caption')
+        if dataSourceName is None: # get name if caption is not set
+            dataSourceName = parentElement.attrib.get('name')
+        print "++ found attribute with name = ", name, " and caption = ", caption, " in datasource ", dataSourceName
         for nodeCol in parentElement.findall('./column-instance'):
             if nodeCol.attrib.get('column') == name:
                 styleName = nodeCol.attrib.get('name')
                 parentElement = parent_map[nodeCol]
                 for nodeStyle in parentElement.findall('./style/style-rule/encoding'):
                     if nodeStyle.attrib.get('field') == styleName and nodeStyle.attrib.get('type')  == "palette":
-                        xmlColorPaletteCode = xmlColorPaletteCode + "\n        <color-palette name='"+ parentElement.attrib.get('caption') + "|" + name.replace("[", "").replace("]", "") + "' type='regular'>\n"
+                        xmlColorPaletteCode = xmlColorPaletteCode + "\n        <color-palette name='"+ dataSourceName + "|" + name.replace("[", "").replace("]", "") + "' type='regular'>\n"
                         for nodeMap in nodeStyle.iter():
                             if nodeMap.tag == "map":
                                 xmlColorPaletteCode = xmlColorPaletteCode + "            <color>" + nodeMap.attrib.get("to") + "</color>\n"
