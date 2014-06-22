@@ -45,7 +45,9 @@ for node in tree.findall('./datasources/datasource/column'):
                         xmlColorPaletteCode = xmlColorPaletteCode + "\n        <color-palette name='"+ dataSourceName + "|" + name.replace("[", "").replace("]", "") + "' type='regular'>\n"
                         for nodeMap in nodeStyle.iter():
                             if nodeMap.tag == "map":
-                                xmlColorPaletteCode = xmlColorPaletteCode + "            <color>" + nodeMap.attrib.get("to") + "</color>\n"
+                                xmlColorPaletteCode = xmlColorPaletteCode + "            <color>" + nodeMap.attrib.get("to") + "</color>"
+                            if nodeMap.tag == "bucket":
+                                xmlColorPaletteCode = xmlColorPaletteCode + " <!-- " + nodeMap.text + "-->\n"
                         xmlColorPaletteCode = xmlColorPaletteCode + "        </color-palette>"
 
 xmlColorPaletteCode = xmlColorPaletteCode + "\n    </preferences>\n</workbook>"
